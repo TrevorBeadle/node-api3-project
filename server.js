@@ -1,13 +1,23 @@
-const express = require('express');
+const express = require("express");
+const morgan = require("morgan");
+const userRouter = require("./users/userRouter");
 
 const server = express();
 
-server.get('/', (req, res) => {
+server.get("/", (req, res) => {
   res.send(`<h2>Let's write some middleware!</h2>`);
 });
 
-//custom middleware
+server.use(express.json());
+server.use(morgan("dev"));
+server.use("/api/users", userRouter);
 
-function logger(req, res, next) {}
+server.get("*", (req, res) => {
+  res.status(404).json({ message: "not found" });
+});
+
+server.use((error, req, res, next) => {
+  res.status(500).json({ message: error });
+});
 
 module.exports = server;
