@@ -13,8 +13,11 @@ server.use(express.json());
 server.use(morgan("dev"));
 server.use("/api/users", userRouter);
 server.use("/api/posts", postRouter);
+// server.use((err, req, res, next) => {
+//   res.status(500).json({ message: "there was a problem" });
+// });
 
-server.get("*", (req, res) => {
+server.use("*", (req, res) => {
   res.status(404).json({ message: "not found" });
 });
 
